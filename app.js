@@ -12,6 +12,22 @@ app.set('view engine', 'ejs');
 // Listen for Request port 3000
 app.listen(3000);
 
+// Custom Middle Ware : Stop this
+app.use((req, res, next) => {
+    console.log('New Request made: ');
+    console.log('host: ', req.hostname);
+    console.log('path: ', req.path);
+    console.log('method ', req.method);
+
+    next();     // can continued to code below
+});
+
+app.use((req, res, next) => {
+    console.log('In the next Middle Ware');
+
+    next();
+});
+
 app.get('/', (req, res) => {
     const blogs = [
         {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
