@@ -6,6 +6,9 @@ const app = express();
 // morgan
 const morgan = require('morgan');
 
+// Connect to MongoDB
+const dbURI = 'mongodb+srv://kritbovorn:JNsBuHYtFxxwXfDq@nodetutorial.ftuix.mongodb.net/?retryWrites=true&w=majority'
+
 // Register View Engine
 app.set('view engine', 'ejs');
 // app.set('views', 'myviews');    //  if we want to change folder of Views
