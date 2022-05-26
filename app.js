@@ -5,15 +5,25 @@ const app = express();
 
 // morgan
 const morgan = require('morgan');
+// mongoose
+const mongoose = require('mongoose');
 
 // Connect to MongoDB
 const dbURI = 'mongodb+srv://kritbovorn:JNsBuHYtFxxwXfDq@nodetutorial.ftuix.mongodb.net/?retryWrites=true&w=majority'
+//  Use mongoose
+mongoose.connect(dbURI).then((result) => {
+    console.log('Connect DataBase Sirrrrrrrrrr');
+    // Listen Port: 3000
+    app.listen(3000);
+}).catch((error) => {
+    console.log('Have Errorrrrrrrr' + error);
+});
 
 // Register View Engine
 app.set('view engine', 'ejs');
 // app.set('views', 'myviews');    //  if we want to change folder of Views
 
-app.listen(3000);
+
 
 // ###  Middle Ware & Static files
 app.use(express.static('public'));      // File in this : public folder : can access entire app
