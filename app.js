@@ -31,6 +31,7 @@ app.set('view engine', 'ejs');
 // ###  Middle Ware & Static files
 app.use(express.static('public'));      // File in this : public folder : can access entire app
 
+app.use(express.urlencoded({ extended: true }));
 
 // ###  Use morgan
 app.use(morgan('dev'));
@@ -59,6 +60,16 @@ app.get('/blogs', (req, res) => {
         console.log('Oops : Could not Fetch all Data to show ' + err);
     });
 });
+// POST
+app.post('/blogs', (req, res) => {
+    const blog = Blog(req.body);
+    blog.save().then((result) => {
+        res.redirect('/blogs');
+    })
+    .catch((err) => {
+        console.log('err');
+    })
+})
 
 app.get('/blogs/create', (req, res) => {
     res.render('create', { title: 'Create a new blog' });
