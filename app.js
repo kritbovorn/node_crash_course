@@ -36,57 +36,28 @@ app.use(express.static('public'));      // File in this : public folder : can ac
 app.use(morgan('dev'));
 
 // ### Test add Data to Database
-app.get('/add-blog', (req, res) => {
-    const blog = new Blog({
-        title: 'New Blog 3',
-        snippet: 'About my new blog and every things',
-        body: 'More about my new some blog.',
-    });
 
-    blog.save().then((result) => {
-        res.send(result);
-    })
-    .catch((err) => {
-        console.log('Oops!! ' + err);
-    });
-});
-
-
-// Find Allssss
-app.get('/all-blogs', (req, res) => {
-    Blog.find().then((result) => {
-        res.send(result);
-    })
-    .catch((err) => {
-        console.log('Oops : cannot show all Blogs ' + err);
-    });
-});
-
-// Find Single blog
-app.get('/single-blog', (req, res) => {
-    Blog.findById('628f83d3d26b9a928e05b120').then((result) => {
-        res.send(result);
-    })
-    .catch((err) => {
-        console.log('Oops : Cannot get Data from ID');
-    });
-});
 
 
 
 
 // Routes
 app.get('/', (req, res) => {
-    const blogs = [
-        {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-        {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-        {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-      ];
-    res.render('index', { title: 'Home', blogs });
+    res.redirect('/blogs');
 });
 
 app.get('/about', (req, res) => {
     res.render('about', { title: 'About' });
+});
+
+// Blog Routes
+app.get('/blogs', (req, res) => {
+    Blog.find().sort({ createdAt: -1 }).then((result) => {
+        res.render('index', { title: 'All Blogs', blogs: result });
+    })
+    .catch((err) => {
+        console.log('Oops : Could not Fetch all Data to show ' + err);
+    });
 });
 
 app.get('/blogs/create', (req, res) => {
