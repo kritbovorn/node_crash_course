@@ -11,6 +11,11 @@ app.set('view engine', 'ejs');
 // app.set('views', 'myviews');    //  if we want to change folder of Views
 
 app.listen(3000);
+
+// ###  Middle Ware & Static files
+app.use(express.static('public'));      // File in this : public folder : can access entire app
+
+
 // ###  Use morgan
 app.use(morgan('dev'));
 
