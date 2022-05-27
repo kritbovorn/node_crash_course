@@ -1,7 +1,17 @@
 <div class="details content">
-    <h2><%= blog.title %></h2>
+    <h2>
+        <%= blog.title %>
+    </h2>
     <div class="content">
-        <p><%= blog.body %></p>
+        <p>
+            <%= blog.body %>
+        </p>
     </div>
-    <a data-doc="<%= blog._id %>" class="delete">Delete</a>
+    <a data-doc="<%= blog._id %>" class="delete">
+
+        <!-- <object data="/trash.svg" type="" class="trash-can"></object> -->
+        <img src="/trash.svg" alt="" class="trash">
+
+    </a>
+
 </div>
