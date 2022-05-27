@@ -1,94 +1,91 @@
 const express = require('express');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+const Blog = require('./models/blog');
 
 // express app
 const app = express();
 
-// morgan
-const morgan = require('morgan');
-// mongoose
-const mongoose = require('mongoose');
+// connect to mongodb & listen for requests
+const dbURI = "mongodb+srv://boie:B11MLQa9fOdveWMw@nodetutor.jpayl.mongodb.net/?retryWrites=true&w=majority";
 
-// Import Blog
-const Blog = require('./models/blog');
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(result => app.listen(3000))
+  .catch(err => console.log(err));
 
-// Connect to MongoDB
-const dbURI = 'mongodb+srv://boie:B11MLQa9fOdveWMw@nodetutor.jpayl.mongodb.net/?retryWrites=true&w=majority'
-//  Use mongoose
-mongoose.connect(dbURI).then((result) => {
-    console.log('Connect DataBase Sirrrrrrrrrr');
-    // Listen Port: 3000
-    app.listen(3000);
-}).catch((error) => {
-    console.log('Have Errorrrrrrrr' + error);
+// register view engine
+app.set('view engine', 'ejs');
+
+// middleware & static files
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+app.use((req, res, next) => {
+  res.locals.path = req.path;
+  next();
 });
 
-// Register View Engine
-app.set('view engine', 'ejs');
-// app.set('views', 'myviews');    //  if we want to change folder of Views
-
-
-
-// ###  Middle Ware & Static files
-app.use(express.static('public'));      // File in this : public folder : can access entire app
-
-app.use(express.urlencoded({ extended: true }));
-
-// ###  Use morgan
-app.use(morgan('dev'));
-
-// ### Test add Data to Database
-
-
-
-
-
-// Routes
+// routes
 app.get('/', (req, res) => {
-    res.redirect('/blogs');
+  res.redirect('/blogs');
 });
 
 app.get('/about', (req, res) => {
-    res.render('about', { title: 'About' });
+  res.render('about', { title: 'About' });
 });
 
-// Blog Routes
+// blog routes
+app.get('/blogs/create', (req, res) => {
+  res.render('create', { title: 'Create a new blog' });
+});
+
 app.get('/blogs', (req, res) => {
-    Blog.find().sort({ createdAt: -1 }).then((result) => {
-        res.render('index', { title: 'All Blogs', blogs: result });
+  Blog.find().sort({ createdAt: -1 })
+    .then(result => {
+      res.render('index', { blogs: result, title: 'All blogs' });
     })
-    .catch((err) => {
-        console.log('Oops : Could not Fetch all Data to show ' + err);
+    .catch(err => {
+      console.log(err);
     });
 });
-// POST
+
 app.post('/blogs', (req, res) => {
-    const blog = Blog(req.body);
-    blog.save().then((result) => {
-        res.redirect('/blogs');
+  // console.log(req.body);
+  const blog = new Blog(req.body);
+
+  blog.save()
+    .then(result => {
+      res.redirect('/blogs');
     })
-    .catch((err) => {
-        console.log('err');
+    .catch(err => {
+      console.log(err);
     });
 });
 
 app.get('/blogs/:id', (req, res) => {
-    const id = req.params.id;
-
-    Blog.findById(id).then((result) => {
-        res.render('details', { blog: result, title: 'Blog Details' });
+  const id = req.params.id;
+  Blog.findById(id)
+    .then(result => {
+      res.render('details', { blog: result, title: 'Blog Details' });
     })
-    .catch((err) => {
-        console.log(err);
+    .catch(err => {
+      console.log(err);
     });
-
-    // console.log(id);
 });
 
-
-app.get('/blogs/create', (req, res) => {
-    res.render('create', { title: 'Create a new blog' });
+app.delete('/blogs/:id', (req, res) => {
+  const id = req.params.id;
+  
+  Blog.findByIdAndDelete(id)
+    .then(result => {
+      res.json({ redirect: '/blogs' });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
-// 404 Page
+
+// 404 page
 app.use((req, res) => {
-    res.status(404).render('404', { title: '404' });
-})
+  res.status(404).render('404', { title: '404' });
+});
