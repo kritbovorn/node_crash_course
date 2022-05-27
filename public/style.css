@@ -103,11 +103,16 @@ h3 {
   cursor: pointer;
   box-shadow: 1px 2px 3px 3px rgba(0, 0, 0, 0.2);
   background-color: crimson;
-  color: white;
 }
+
+.delete:hover .trash {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(170deg) brightness(104%) contrast(105%);
+}
+
 
 /* create styles */
 .create-blog form {
+
   max-width: 400px;
   margin: 0 auto;
 }
@@ -133,8 +138,23 @@ textarea {
   margin-top: 20px;
   background: crimson;
   color: white;
-  padding: 6px;
+  padding: 16px;
+  border-radius: 22px;
   border: 0;
   font-size: 1.2em;
   cursor: pointer;
+}
+
+.create-blog button:hover {
+  background-color: rgb(19, 95, 226);
+}
+
+/* 404 Page */
+.errorPage {
+  margin: 5rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+
+
 }
