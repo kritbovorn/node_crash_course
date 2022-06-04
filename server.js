@@ -9,8 +9,32 @@ const server = http.createServer((req, res) => {
     // Set Header Content Type
     res.setHeader('Content-Type', 'text/html');
 
+    // Define : path
+    let path = './views/';
+
+    switch (req.url) {
+        case '/':
+            path += 'index.html';
+            res.statusCode = 200;
+            break;
+        case '/about':
+            path += 'about.html';
+            res.statusCode = 200;
+            break;
+        // Redirect path
+        case '/about-me':
+            res.setHeader('Location', '/home');    // redirect path to ...
+            res.statusCode = 301;
+            res.end();
+            break;
+        default:
+            path += '404.html';
+            res.statusCode = 404;
+            break;
+    }
+
     // Send HTML File to Browser
-    fs.readFile('./views/index.html', {encoding: 'utf-8'}, (err, data) => {
+    fs.readFile(path, { encoding: 'utf-8' }, (err, data) => {
         if (err) {
             console.log(err);
             res.end();
