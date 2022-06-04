@@ -1,10 +1,22 @@
 const http = require('http');
 const fs = require('fs');
-
+const _ = require('lodash'); 
 
 
 const server = http.createServer((req, res) => {
-    console.log(req.url, req.method);
+    // console.log(req.url, req.method);
+
+    // lodash
+    const randomNumber = _.random(0, 20);
+    console.log(`### Random number is ${randomNumber}`);
+
+    const greet = _.once(() => {
+        console.log('Hello');
+    });
+
+    greet();
+    greet();
+    greet();
 
     // Set Header Content Type
     res.setHeader('Content-Type', 'text/html');
@@ -23,7 +35,7 @@ const server = http.createServer((req, res) => {
             break;
         // Redirect path
         case '/about-me':
-            res.setHeader('Location', '/home');    // redirect path to ...
+            res.setHeader('Location', '/about');    // redirect path to ...
             res.statusCode = 301;
             res.end();
             break;
@@ -42,7 +54,7 @@ const server = http.createServer((req, res) => {
         }
         res.write(data);
         res.end();
-    })
+    });
 });
 
 server.listen(5000, 'localhost', () => {
