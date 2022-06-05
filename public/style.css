@@ -97,6 +97,9 @@ h3 {
     color: white;
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.4);
 }
+.delete:hover img {
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(170deg) brightness(104%) contrast(105%);
+}
 
 /* create styles */
 .create-blog form {
