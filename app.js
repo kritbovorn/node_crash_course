@@ -7,11 +7,7 @@ const Blog = require('./models/blog');
 const app = express();
 
 
-// ### Register view ejs
-app.set('view engine', 'ejs');
 
-// middle ware & static files
-app.use(express.static('public'));
 
 // Connect Database: mongo DB ( Use mongoose )
 const dbURI = 'mongodb+srv://kritbovorn:8elyCq4oozrHlbTj@ninjatutor.hb4ez.mongodb.net/?retryWrites=true&w=majority'
@@ -20,6 +16,14 @@ mongoose.connect(dbURI).then((result) => {
 }).catch((err) => {
     console.log(err);
 });
+
+// ### Register view ejs
+app.set('view engine', 'ejs');
+
+// middle ware & static files
+app.use(express.static('public'));
+app.use(express.urlencoded({extended: true}));
+// app.use(express.urlencoded());
 
 
 // Middleware
@@ -43,6 +47,30 @@ app.get('/blogs', (req,res) => {
         console.log(err);
     });
 });
+
+app.post('/blogs', (req, res) => {
+   const blog = new Blog(req.body);
+   blog.save().then((result) => {
+       res.redirect('/blogs');
+   }).catch((err) => console.log(err));
+});
+
+
+app.get('/blogs/:id', (req, res) => {
+    const id = req.params.id;
+    Blog.findById(id).then((result) => {
+        res.render('details', {blog: result, title: 'Blog Details...'});
+    }).catch((err) => console.log(err));
+});
+
+app.delete('/blogs/:id', (req, res) => {
+    const id = req.params.id;
+
+    Blog.findByIdAndDelete(id).then((result) => {
+        res.json({redirect: '/blogs'});
+    }).catch((err) => console.log(err));
+})
+
 
 app.get('/blogs/create', (req, res) => {
     res.render('create', { title: 'Create new blog'});
