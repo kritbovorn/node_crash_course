@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 
 // express app
 const app = express();
@@ -6,6 +7,12 @@ const app = express();
 // ### Register view ejs
 app.set('view engine', 'ejs');
 
+// middle ware & static files
+app.use(express.static('public'));
+
+
+// Middleware
+app.use(morgan('dev'));
 
 app.get('/', (req, res) => {
     const blogs = [
@@ -16,13 +23,14 @@ app.get('/', (req, res) => {
     res.render('index', { title: 'Home Page', blogs: blogs});
 });
 
+
 app.get('/about', (req, res) => {
     res.render('about', { title: 'About Page'});
 });
 
 app.get('/blogs/create', (req, res) => {
     res.render('create', { title: 'Create new blog'});
-})
+});
 
 app.use((req, res) => {
     res.status(404).render('404', { title: 'Oops...Page not founded'});
